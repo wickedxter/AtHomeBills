@@ -1,0 +1,9 @@
+[1116] debug @0.002351> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[4840] debug @0.002314> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[600] debug @0.002280> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[600] error @0.263325> [hit #1]request to GET / crashed: Can't call method "execute" on an undefined value at C:\AtHomeBills\athomebills.pl line 424, <DATA> line 16. in C:/server/Perl5142/site/lib/Dancer/Handler.pm l. 99
+[4084] debug @0.002303> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[4704] debug @0.002302> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[1812] debug @0.002355> [hit #1]Adding sqlite_unicode to DBI connection params to enable UTF-8 support in C:/server/Perl5142/site/lib/Dancer/Plugin/Database.pm l. 168
+[1812] error @0.024372> [hit #1]request to GET / crashed: Can't call method "execute" on an undefined value at C:\AtHomeBills\athomebills.bat line 406, <DATA> line 16. in C:/server/Perl5142/site/lib/Dancer/Handler.pm l. 99
+[1812] error @0.001304> [hit #3]request to GET / crashed: Can't call method "execute" on an undefined value at C:\AtHomeBills\athomebills.bat line 406. in C:/server/Perl5142/site/lib/Dancer/Handler.pm l. 99

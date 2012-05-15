@@ -1,0 +1,14 @@
+---
+appname: athomebills
+charset: UTF-8
+engines:
+  template_toolkit:
+    ENCODING: utf8
+    start_tag: <%
+    stop_tag: '%>'
+layout: main
+plugins:
+  Database:
+    database: C:/
+    driver: SQLite
+template: template_toolkit

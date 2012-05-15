@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>@HomeBills v1.0.9: Add Bills</title>
+<meta name="keywords" content="" />
+<meta name="Gestured" content="" />
+
+
+<style type="text/css">
+.fleft {float:left}
+.fright {float:right}
+.fcenter {float:none;text-align:center}
+.fclear {clear:both}
+.inner_copy {border:0;color:#f00;float:left;width:50% !important;margin:-100% 0 0 0;overflow:hidden;line-height:0;padding:0;font-size:11px}
+body {margin:30px 0 0 0;padding:0;background:#000;text-align:justify;font-family: Tahoma,Arial,Helvetica,sans-serif;font-size:11px;color:#fff}
+h1, h2, h3 {margin-top:0}
+h1 {font-size:1.6em;font-weight:normal}
+h2 {font-size:1.6em}
+h3 {font-size:1em}
+ul {}
+a {text-decoration:none;color:#2C4449}
+a:hover {border-bottom:none}
+a img {border:none}
+img.left {float:left;margin:0 20px 0 0}
+img.right {float:right;margin:0 0 0 20px}
+#header {width:960px;margin:0 auto}
+/* Header */
+#logo {width:960px;height:191px;margin:0 auto;background:url(<% request.uri_base %>/images/img02.jpg) no-repeat left top}
+#logo h1, #logo p {margin:0;color:#fff}
+#logo span {color:#fff}
+#logo h1 {padding:25px 0 0 40px;letter-spacing:-1px;text-transform:lowercase;font-weight:normal;font-size:4.8em}
+#logo p {text-transform:lowercase;padding:4px 0 0 43px;font-family:Georgia, "Times New Roman",Times,serif;font-size:22px;color:#fff}
+#logo a {border:none;text-decoration:none;color:#fff}
+/* Menu */
+#menu {width:960px;margin:0 auto;padding:0;height:55px;padding-top:35px;background:url(<% request.uri_base %>/images/img01.jpg) repeat-x left top}
+#menu ul {margin:0;padding:0;list-style:none}
+#menu li {float:left;display:inline}
+#menu a {height:40px;margin:0;padding:40px 30px 0 30px;background:url(<% request.uri_base %>/images/img06.jpg) no-repeat right 15px;text-decoration:none;text-transform:uppercase;font-size:11px;font-weight:bold;color:#fff}
+#menu a:hover {color:#fff}
+#menu .current_page_item a {color:#fff}
+/* Wrapper */
+#wrapper {width:100%;margin:0;padding:0}
+/* Page */
+#page {width:960px;margin:0 auto;padding:0;background:url(<% request.uri_base %>/images/img03.jpg) no-repeat left top}
+#page-bg {}
+/* Latest Post */
+#latest-post {padding:20px;border-bottom:1px #2C4449 solid}
+/* Content */
+#content {float:left;width:460px;margin:0 20px 20px 20px}
+.post {padding-bottom:15px;line-height:200%;border-bottom:1px #2C4449 solid}
+.post h1 {font-weight:normal}
+.title {margin:0;padding:30px 0 4px 0;font-size:28px;font-weight:normal}
+.title a {border-bottom:none;color:#fff}
+.title a:hover {border-bottom:1px dotted #000}
+.byline {margin:10px 0 20px 0;padding:4px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#fff}
+.tag {padding:0 15px}
+.entry {padding:0 0}
+.links {width:80px;height:33px;background:url(<% request.uri_base %>/images/img05.jpg) no-repeat left top;text-align:right;font-weight:bold}
+.links a {display:block;height:25px;padding-top:8px;padding-left:10px;text-align:left}
+.links a:hover {}
+/* Sidebars */
+#sidebar1 {float:left;width:230px}
+#sidebar2 {float:right;width:230px}
+.sidebar {float:left;padding:0;color:#737373}
+.sidebar ul {margin:0;padding:20px 0 0 0;list-style:none}
+.sidebar li {padding:0 0 20px 0}
+.sidebar li ul {background:none;padding-bottom:20px}
+.sidebar li li {margin:0 15px;padding:8px 0;border-bottom:1px #314A4F dashed;background:none}
+
+.sidebar li h2 {height:26px;margin:0 15px;padding:14px 15px 0 0;border-bottom:1px #2C4449 solid;text-transform:capitalize;font-size:18px;font-family:Tahoma,Arial,Helvetica,sans-serif;font-weight:normal;color:#fff}
+.sidebar a {color:#BDBDBD}
+/* Search */
+#searchform {margin:0;padding:0 0 20px 0}
+#searchform br {display:none}
+#searchform h2 {}
+#s {margin:10px 0 0 15px;padding:2px 2px;width:165px;height:18px;border:1px solid #ccc;background:#fff;font-size:10px;color:#000}
+#x {margin:0;padding:2px 5px;height:25px;background:#CA8186;text-decoration:none;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#ccc}
+/* Calendar */
+#calendar_wrap {padding:10px 15px;text-align:center}
+#calendar_wrap table {width:100%}
+#calendar_wrap th {}
+#calendar_wrap td {}
+#calendar_wrap tfoot td {border:none}
+#calendar_wrap tfoot td#prev {text-align:left;font-weight:bold;border:none}
+#calendar_wrap tfoot td#prev a {border:none}
+#calendar_wrap tfoot td#next {text-align:right;font-weight:bold;border:none}
+#calendar_wrap tfoot td#next a {border:none}
+/* Footer */
+#footer {width:960px;height:80px;margin:0 auto;padding:0 20px;border-top:1px solid #2C4449}
+#footer p {margin:0;padding:10px 0 0 0;text-align:center;text-transform:uppercase;font-size:10px;font-family:Arial,Helvetica,sans-serif;color:#737373}
+#footer a {color:#BDBDBD}
+#footer .link {}
+#footer .copyright {}
+
+.auto-style1 {
+	font-size: small;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.over_due {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	font-size: small;
+	color: #990000;
+}
+.auto-style4 {
+	font-size: x-small;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.calender_current_day {
+	color: #3366CC;
+}
+.auto-style5 {
+	padding-bottom: 15px;
+	line-height: 200%;
+	border-bottom: 1px #2C4449 solid;
+	text-align: center;
+}
+.auto-style6 {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<div id="menu">
+			<ul id="main">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; v1.0.9</strong></li>
+			</ul>
+		</div>
+		<div id="logo">
+			<h1><a href="#">@ </a>home bills</h1>
+			<p class="auto-style1"><br />
+			<br />
+			<span class="auto-style4">Main &gt; add bills</span></p>
+		</div>
+	</div>
+	<div id="page"><div class="inner_copy"><div class="inner_copy"></div></div>
+		<div id="sidebar1" class="sidebar">
+			<ul>
+				<li>
+					<h2>Menu</h2>
+					<ul>
+						<li><a href="/" title="Main Page">Home Page</a></li>
+						<li><a href="/addBills" title="Add your bills">Add Bills</a></li>
+						<li><a href="/EditBillsViewAll" title="Click here to pick what bill to edit">
+						Edit Bills</a></li>
+						<li><a href="/ViewAll" title="Click here to view all bills and pay them here">View 
+						Current Month</a></li>
+						<li><a href="/ViewLastMonth" title="Links to last months bills">View 
+						Last Month(s)</a></li>
+						<li><a href="/Help" title="Need help? ">Help/About</a></li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div id="content" style="height: 354px">
+			<div class="auto-style5">
+				<% todays_date %></div>
+			<div class="post" style="height: 295px">
+				<table style="width: 100%; height: 316px"><form action="./SaveBillInfo" method="post">
+					<tr>
+						<td class="auto-style6" style="height: 34px; width: 147px">
+						Company</td>
+						<td class="auto-style6" style="height: 34px">
+						<input name="company" type="text" /><br><br></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="height: 34px; width: 147px">
+						Category</td>
+						<td class="auto-style6" style="height: 34px">
+						<select name="cat_other">
+						<option selected="selected" value="">------ Select ------
+						</option>
+						<% FOREACH single = cats%>
+						<option value="<% single %>"><% single %></option>
+						<% END %>
+						</select><br>
+						---OTHER---<br>
+						<input name="cat" type="text"  /><br><BR>
+						</td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Amount Due</td>
+						<td class="auto-style6">
+						<input name="amt_due" type="text" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Due Date</td>
+						<td class="auto-style6">
+						<div><input name="date_due" type="text"  value="<% int_date %>"/><br>(YYYYMMDD) enter the day of month 2 digits</div></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Notes</td>
+						<td class="auto-style6">
+						<input name="notes" style="width: 262px" type="text" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Occorance<br />
+						1 = Once a Month</td>
+						<td class="auto-style6">
+						<input name="occ" style="width: 24px" type="text" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Regular 
+						Amount Due</td>
+						<td class="auto-style6">
+						<input name="reg_amt_due" type="text" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">&nbsp;</td>
+						<td class="auto-style6">
+						<input type="submit" value="Save Bill" /></form></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="sidebar2" class="sidebar">
+			<ul>
+				<li>
+					<form id="searchform" method="post" action="./search">
+						<div>
+							<h2>Bill Search</h2>
+							<input type="text" name="search" id="s" size="15" value="" />
+						</div>
+					</form>
+				</li>
+				<li>
+					<p class="tag">&nbsp;</p>
+				</li>
+				<li>
+					<h2>Calendar</h2>
+					<div id="calendar_wrap">
+						<% calander %>
+					</div>
+				</li>
+				<li>
+					<h2>&nbsp;</h2>
+					<ul>
+						<li></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div style="clear:both">&nbsp;</div>
+	</div>
+</div>
+<div id="footer"><div class="fleft"><p>.</p></div><div class="fcenter"><p><br />
+	© COPYRIGHT @ home bills 2012<br />
+	created by: wickedxter a.k.a aaron yorkovitch<br />
+	<br />
+	<br />
+	Templeate Design by: Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p></div><div class="fclear"></div></div>
+</body>
+</html>

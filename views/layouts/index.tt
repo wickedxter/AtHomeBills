@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Gestured by Free CSS Templates</title>
+<meta name="keywords" content="" />
+<meta name="Gestured" content="" />
+<link href="/css/default.css" rel="stylesheet" type="text/css" media="screen" />
+<style type="text/css">
+.auto-style1 {
+	font-size: small;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.auto-style2 {
+	margin-bottom: 1px;
+}
+.auto-style3 {
+	text-align: center;
+}
+.over_due {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	font-size: small;
+	color: #990000;
+}
+.auto-style4 {
+	font-size: x-small;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.calender_current_day {
+	color: #3366CC;
+}
+</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<div id="menu">
+			<ul id="main">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; v1.0.0</strong></li>
+			</ul>
+		</div>
+		<div id="logo">
+			<h1><a href="#">@ </a>home bills</h1>
+			<p class="auto-style1"><br />
+			<br />
+			<span class="auto-style4">Main &gt;</span></p>
+		</div>
+	</div>
+	<div id="page"><div class="inner_copy"><div class="inner_copy">All <a href="http://www.magentothemesworld.com" title="Best Magento Templates">premium Magento themes</a> at magentothemesworld.com!</div></div>
+		<div id="sidebar1" class="sidebar">
+			<ul>
+				<li>
+					<h2>Menu</h2>
+					<ul>
+						<li><a href="AT_HomeBills.pl?action=home">Home Page</a></li>
+						<li><a href="AT_HomeBills.pl?action=addBills">Add Bills</a></li>
+						<li><a href="AT_HomeBills.pl?action=EditBillsViewAll">
+						Edit Bills</a></li>
+						<li><a href="AT_HomeBills.pl?action=ViewAll">View 
+						Current Month</a></li>
+						<li><a href="AT_HomeBills.pl?action=ViewLastMonth">View 
+						Last Month(s)</a></li>
+						<li><a href="AT_HomeBills.pl?action=Help">Help/About</a></li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<div class="post">
+				<table style="width: 100%; height: 151px">
+					<tr>
+						<td style="height: 17px">
+						<table style="width: 100%">
+							<tr>
+								<td class="auto-style3">March 24, 2012 03:55 PM</td>
+							</tr>
+						</table>
+						<strong><br />
+						UPCOMMING BILLS</strong></td>
+					</tr>
+					<tr>
+						<td>
+						<table class="auto-style2" style="width: 100%">
+							<tr>
+								<td class="auto-style3" style="width: 159px">
+								Power</td>
+								<td class="auto-style3" style="width: 142px">
+								03/31/2012</td>
+								<td class="auto-style3">$190</td>
+							</tr>
+							<tr>
+								<td class="auto-style3" style="width: 159px">
+								Crack</td>
+								<td class="auto-style3" style="width: 142px">
+								04/03/2012</td>
+								<td class="auto-style3">$1000</td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td style="height: 1px"><strong>OVERDUE BILLS</strong></td>
+					</tr>
+					<tr>
+						<td>
+						<table class="over_due" style="width: 100%">
+							<tr>
+								<td class="auto-style3" style="width: 159px">
+								Power</td>
+								<td class="auto-style3" style="width: 142px">
+								03/31/2012</td>
+								<td class="auto-style3">$190</td>
+							</tr>
+							<tr>
+								<td class="auto-style3" style="width: 159px">
+								Whore Houses</td>
+								<td class="auto-style3" style="width: 142px">
+								04/03/2012</td>
+								<td class="auto-style3">$1000</td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="post">
+				<h1 class="title"><a href="#">Welcome to @Home Bills!</a></h1>
+				<p class="byline">Posted on March, 24 2012 by system</p>
+				<div class="entry">
+					<p>Thx for useing @ home bills for your bill needs. This is 
+					providied free of charge for personal use. You can visit us 
+					anytime at <a href="http://www.athomebills.com">
+					www.athomebills.com</a>. To get stated add bills from the 
+					menu on the left. If you have any questions look in the Help 
+					link in the menu area, if not goto our websites fourm and 
+					get your questions or concerns or questions answered. If you 
+					would like to have a feature added please dont be shy and 
+					post in our feature add fourm section.</p>
+					<p>@HomeBills is a standalone web-based bill software, it 
+					keeps track of bills you want to keep an eye on. Requires 
+					perl version of at least v5.14.2, as well as Dancer, SQLite</p>
+				</div>
+			</div>
+		</div>
+		<div id="sidebar2" class="sidebar">
+			<ul>
+				<li>
+					<form id="searchform" method="get" action="#">
+						<div>
+							<h2>Bill Search</h2>
+							<input type="text" name="s" id="s" size="15" value="" />
+						</div>
+					</form>
+				</li>
+				<li>
+					<p class="tag">&nbsp;</p>
+				</li>
+				<li>
+					<h2>Calendar</h2>
+					<div id="calendar_wrap">
+						<table summary="Calendar">
+							<caption>March 2008</caption>
+							<thead>
+								<tr><th abbr="Monday" scope="col" title="Monday">M</th><th abbr="Tuesday" scope="col" title="Tuesday">T</th><th abbr="Wednesday" scope="col" title="Wednesday">W</th><th abbr="Thursday" scope="col" title="Thursday">T</th><th abbr="Friday" scope="col" title="Friday">F</th><th abbr="Saturday" scope="col" title="Saturday">S</th><th abbr="Sunday" scope="col" title="Sunday">S</th></tr>
+							</thead>
+							<tfoot>
+								<tr><td abbr="February" colspan="3" id="prev"><a href="#" title="">&laquo; Feb</a></td><td class="pad">&nbsp;</td><td abbr="April" colspan="3" id="next"><a href="#" title="">Apr &raquo;</a></td></tr>
+							</tfoot>
+							<tbody>
+								<tr><td colspan="5" class="pad">&nbsp;</td><td>1</td><td>2</td></tr>
+								<tr><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+								<tr><td>10</td><td id="today">11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td></tr>
+								<tr><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td></tr>
+								<tr><td><span class="calender_current_day">24</span></td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td></tr>
+								<tr><td>31</td><td class="pad" colspan="6">&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</li>
+				<li>
+					<h2>&nbsp;</h2>
+					<ul>
+						<li></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div style="clear:both">&nbsp;</div>
+	</div>
+</div>
+<div id="footer"><div class="fleft"><p>.</p></div><div class="fcenter"><p><br />
+	© COPYRIGHT @ home bills 2012<br />
+	created by: wickedxter a.k.a aaron yorkovitch<br />
+	<br />
+	<br />
+	Templeate Design by: Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p></div><div class="fclear"></div></div>
+</body>
+</html>
