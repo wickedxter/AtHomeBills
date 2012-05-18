@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>@HomeBills v1.0.9: Add Bills</title>
+<title>@HomeBills v1.0.10: Add Bills</title>
 <meta name="keywords" content="" />
 <meta name="Gestured" content="" />
 
@@ -125,7 +125,7 @@ img.right {float:right;margin:0 0 0 20px}
 	<div id="header">
 		<div id="menu">
 			<ul id="main">
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; v1.0.9</strong></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; v1.0.10</strong></li>
 			</ul>
 		</div>
 		<div id="logo">
@@ -200,9 +200,13 @@ img.right {float:right;margin:0 0 0 20px}
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">Occorance<br />
-						1 = Once a Month</td>
+						</td>
 						<td class="auto-style6">
-						<input name="occ" style="width: 24px" type="text" /></td>
+						<select name="occ">
+						<option selected="selected" value="0">No</option>
+						<option value="1">Yes</option>
+						</select>
+						</td>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">Regular 
