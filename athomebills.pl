@@ -1,7 +1,5 @@
 #!perl
 
-###### *nix users change the she-bang to point to where perl is installed
-###### Win32 users shouldnt need to change this. 
 
 use Cwd;
 use lib qw(cwd());
@@ -10,6 +8,7 @@ use warnings;
 use DateTime;
 use Dancer;
 use Dancer::Plugin::Database;
+use Dancer::Exception qw(:all);
 use HTML::Calendar::Simple;
 
 
@@ -19,7 +18,7 @@ use HTML::Calendar::Simple;
 #########
 # filename: athomebills.pl - The one and only
 # built: 03/24/2012
-# version: 1.0.9
+# version: 1.0.10
 # home: https://sourceforge.net/projects/athomebills/
 ################################
 # This is built useing dancer framework rather then
@@ -29,6 +28,9 @@ use HTML::Calendar::Simple;
 # web program so it can be downloaded and used like an
 # GUI program.
 ################################
+
+#Register Expections
+#Load_Exp();
 
 #################
 # Date and time
@@ -323,6 +325,39 @@ get '/Help' => sub {
     },{layout => undef};   
 };    
 
+###############
+# Confirm Deletion of bill
+get '/ConfirmDel/:coname' => sub {
+    
+    my $company = params->{coname};
+    
+    template 'confirm_del',{
+            'todays_date' => $whole_date,
+             'calander' => $changed,
+             'co_name' => $company,
+    },{layout => undef};   
+};
+
+###############
+# Deletion of bill
+get '/DeleteBill/:company' => sub {
+    
+    #access the bills company name from route
+    my $company = params->{company};
+    
+    #get the current month table from Database
+    my $table = current_month_table();
+    
+    my $del = database->prepare("DELETE FROM $table WHERE company = ?");
+    $del->execute($company);
+   
+   #write news to main page
+   WriteMainPage("Bill Deleted","Bill $company has been DELETED");
+   
+   return redirect '/';
+};
+
+
 #let dancer do its thing
 Dancer->dance;
 
@@ -333,6 +368,13 @@ Dancer->dance;
 # SUBRUTINES
 #
 ############
+
+sub Load_Exp {
+    
+    #register_exception('NoPermission',
+      #              message_pattern => "not enough permission: %s"
+       #           );
+}
 
 #-----------------------------------------------------------------------
 # current_month_table();

@@ -171,7 +171,7 @@ img.right {float:right;margin:0 0 0 20px}
 								<td class="auto-style5" style="height: 14px; width: 70px;" valign="middle">
 								Amount Due</td>
 								<td class="auto-style5" style="height: 14px" valign="middle">
-								Pay Bill</td>
+								Pay Bill/Delete Bill</td>
 							</tr>
 							<tr>
 								<td style="width: 112px; height: 37px" valign="top">
@@ -190,9 +190,9 @@ img.right {float:right;margin:0 0 0 20px}
 								<td class="auto-style5" style="height: 43px; width: 70px;" valign="middle">$ <% pass_all.$bill.amt_due %></td>
 								<td style="height: 43px" valign="middle" class="auto-style5">
 								<% IF  pass_all.$bill.amt_paid == pass_all.$bill.amt_due or pass_all.$bill.amt_paid > pass_all.$bill.amt_due %>	
-								PAID
+								PAID / <a href="/ConfirmDel/<% pass_all.$bill.company %>">DELETE</a>
 								<% ELSE %>
-								<a href="/PayBill/<% pass_all.$bill.company %>">PAY BILL</a></form>
+								<a href="/PayBill/<% pass_all.$bill.company %>">PAY BILL</a></form> / <a href="/ConfirmDel/<% pass_all.$bill.company %>">Delete</a>
 								<% END %>
 								</td>
 							</tr>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>@HomeBills  v1.0.10: Add Bills</title>
+<title>@HomeBills: Add Bills</title>
 <meta name="keywords" content="" />
 <meta name="Gestured" content="" />
 
@@ -110,10 +110,13 @@ img.right {float:right;margin:0 0 0 20px}
 	color: #3366CC;
 }
 .auto-style5 {
-	margin-top: 0;
+	padding-bottom: 15px;
+	line-height: 200%;
+	border-bottom: 1px #2C4449 solid;
+	text-align: center;
 }
-.auto-style6 {
-	margin-bottom: 209;
+.style1 {
+	text-align: center;
 }
 </style>
 </head>
@@ -129,7 +132,7 @@ img.right {float:right;margin:0 0 0 20px}
 			<h1><a href="#">@ </a>home bills</h1>
 			<p class="auto-style1"><br />
 			<br />
-			<span class="auto-style4">Main &gt; HELP</span></p>
+			<span class="auto-style4">Main &gt; confirm delete</span></p>
 		</div>
 	</div>
 	<div id="page"><div class="inner_copy"><div class="inner_copy"></div></div>
@@ -138,15 +141,15 @@ img.right {float:right;margin:0 0 0 20px}
 				<li>
 					<h2>Menu</h2>
 					<ul>
-						<li><a href="/" title="Main Page">Home Page</a></li>
-						<li><a href="/addBills" title="Add your bills">Add Bills</a></li>
-						<li><a href="/EditBillsViewAll" title="Click here to pick what bill to edit">
+						<li><a href="/">Home Page</a></li>
+						<li><a href="/addBills">Add Bills</a></li>
+						<li><a href="/EditBillsViewAll">
 						Edit Bills</a></li>
-						<li><a href="/ViewAll" title="Click here to view all bills and pay them here">View 
+						<li><a href="/ViewAll">View 
 						Current Month</a></li>
-						<li><a href="/ViewLastMonth" title="Links to last months bills">View 
+						<li><a href="/ViewLastMonth">View 
 						Last Month(s)</a></li>
-						<li><a href="/Help" title="Need help? ">Help/About</a></li>
+						<li><a href="/Help">Help/About</a></li>
 						<li></li>
 						<li></li>
 						<li></li>
@@ -159,44 +162,16 @@ img.right {float:right;margin:0 0 0 20px}
 				
 				<table style="width: 100%">
 					<tr>
-						<td style="height: 26px"><center><% todays_date %></center></td>
+						<td style="height: 26px"><% todays_date %></td>
 					</tr>
 					<tr>
-						<td style="height: 353px" valign="top">
-						
-						HELP:<hr style="width: 449px" /><br />
-						First, you will need to add bill(s) to the service click the Add bills link and fill out the form.
-						Next submit it and besure to check back because the main page will display bills upcomming
-						in 10 days and what are overdue.<br><br>
-						
-						You can edit the bills information at anytime using the search or Edit Bills link of the Nav. Menu.<BR><BR>
-						
-						NOTE: This service in no way is connected to the intranet, it is a standalone program with its own web server
-						prividied by the Perl Dancer Framework. Don't forget to check for updates.
-						<br />
-						<br />
-						<br />
-						REVISION:<br />
-						<hr /><br />
-						v1.010<br />
-						-= Added a function to delete bills<br>
-						<br>
-						v1.09.2<br />
-						-= Bug was found in the installion script that created the database and populated it.<br>
-						-= Occurance is now a drop down box with Yes or No selections rather then and empty input box<br>
-						<br>
-						v1.09<br />
-						-= Rewrote it to use Dancer framework, new layout and 
-						new features. Search and the calendar. Also switched 
-						from a flat-file database to SQLite database. Even tho its a rewrite I still have
-						alot of reimplamentation of behind the seane functions to match what was from
-						the older versions.<br />
-						<br />
-						-= Bugs:<br />
-						<br />
-						<hr /><br />
-						v1.0.0 - v 1.0.8<br />
-						This was the old version (unsupported)</td>
+						<td style="height: 353px" valign="top" class="style1">
+						Are you sure you wanna delete the bill??<br />
+						<br /><br>
+						<% co_name %><br><br>
+						<a href="/DeleteBill/<% co_name %>">DELETE IT</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						<a href="/ViewAll">KEEP IT</a></td>
 					</tr>
 				</table>
 			</div>
@@ -204,10 +179,10 @@ img.right {float:right;margin:0 0 0 20px}
 		<div id="sidebar2" class="sidebar">
 			<ul>
 				<li>
-					<form id="searchform" method="post" action="./search">
+					<form id="searchform" method="get" action="#">
 						<div>
 							<h2>Bill Search</h2>
-							<input type="text" name="search" id="s" size="15" value="" />
+							<input type="text" name="s" id="s" size="15" value="" />
 						</div>
 					</form>
 				</li>
@@ -231,8 +206,7 @@ img.right {float:right;margin:0 0 0 20px}
 		<div style="clear:both">&nbsp;</div>
 	</div>
 </div>
-<div id="footer" class="auto-style6"><div class="fleft"><p>.</p></div><div class="fcenter">
-	<p class="auto-style5"><br />
+<div id="footer"><div class="fleft"><p>.</p></div><div class="fcenter"><p><br />
 	© COPYRIGHT @ home bills 2012<br />
 	created by: wickedxter a.k.a aaron yorkovitch<br />
 	<br />

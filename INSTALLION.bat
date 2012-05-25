@@ -102,13 +102,11 @@ say "created table $new_table";
 $dbh->do("CREATE TABLE IF NOT EXISTS main_page (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                                                               date TEXT,
                                                                               title TEXT,
-                                                                              posts TEXT)") or say "Error Creating Table main_page\n";
+                                                                              posts TEXT,
+                                                                              ") or say "Error Creating Table main_page\n";
 say "created table main_page";
 $dbh->do("CREATE TABLE IF NOT EXISTS current_month (NOM text)") or say "Error Creating Table\n";
-
-my $sth = $dbh->prepare("INSERT INTO current_month ('NOM') VALUES (?) ") or say "Error updateing table current_month\n";
-$sth->execute($months[$mon]);
-
+$dbh->do("UPDATE current_month SET NOM = $months[$mon] ") or say "Error updateing table current_month\n";
 say "created current_month";
 
 print "Done...\n";

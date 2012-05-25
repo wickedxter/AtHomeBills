@@ -9,6 +9,6 @@ engines:
 layout: main
 plugins:
   Database:
-    database: C:/
+    database: C:/athomebills_prod/db/database.sqlite
     driver: SQLite
 template: template_toolkit
