@@ -2,8 +2,8 @@
 #    READ ME
 ####
 
-YOU NEED PERL INSTALLED !
-v5.14.2 was the dev. platform. anything under 5.10 use at own risk and report and problems.
+You Need perl 5.14.2.
+AtHomeBills was built using 5.14.2 anything below errors will happen.
 
 if you dont have perl use can download it from these following locations:
 
@@ -14,11 +14,15 @@ http://strawberryperl.com/ - you'll have to download the dependencies that are b
 
 Dependencies (Modules not included in downloading perl from links above, these have to be install seperate):
 
-Dancer Framework
+(install the newest version)
+
+Dancer
+Dancer::Plugin::Database
 DateTime
 DBD::Sqlite
-HTML::Calendar::Simple (Included in zip)
+YAML
 
+Make sure that these modules are install first before going any futher.
 
 WIN32: INSTALLION.bat
 

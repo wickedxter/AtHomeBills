@@ -15,7 +15,8 @@ goto endofperl
 
 
 use Cwd;
-use lib qw(cwd());
+my $cmd = cwd();
+use lib qw($cwd);
 use strict;
 use warnings;
 use DateTime;
