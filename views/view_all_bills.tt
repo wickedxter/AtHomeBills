@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>@HomeBills  v1.0.10: Viewing All Bills</title>
+<title>@HomeBills <% ver %>: Viewing All Bills</title>
 <meta name="keywords" content="" />
 <meta name="Gestured" content="" />
 
@@ -119,7 +119,7 @@ img.right {float:right;margin:0 0 0 20px}
 	<div id="header">
 		<div id="menu">
 			<ul id="main">
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; v1.0.10</strong></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp; <% ver %></strong></li>
 			</ul>
 		</div>
 		<div id="logo">
