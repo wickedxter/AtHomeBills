@@ -14,9 +14,9 @@ goto endofperl
 #line 15
 
 
-use Cwd;
-my $cmd = cwd();
-use lib qw($cwd);
+use FindBin;
+use lib $FindBin::Bin;
+
 use strict;
 use warnings;
 use DateTime;
@@ -24,6 +24,7 @@ use Dancer;
 use Dancer::Plugin::Database;
 use Dancer::Exception qw(:all);
 use HTML::Calendar::Simple;
+use Data::Dumper;
 
 
 ################################
@@ -43,8 +44,7 @@ use HTML::Calendar::Simple;
 # GUI program.
 ################################
 
-#Register Expections
-#Load_Exp();
+our $VERSION = 'v1.0.10 build 3';
 
 #################
 # Date and time
@@ -107,17 +107,18 @@ get '/' => sub {
     #This goes thew the database resting bills for the new month
     # or adding to the unpaid bills.
     ################
-    my $newMonth = CheckForNewMonth($mon);
-
+   
+    CheckForNewMonth($mon);
     
     
     
     template 'main_page', {
         'todays_date' => $whole_date,
         'upcomming' => get_bills('upcomming'),
-        'over_due' => get_bills('over_due'),
+       'over_due' => get_bills('over_due'),
         'calander' => $changed,
         'News' => get_news(),
+        'ver' => $VERSION,
     },{ layout => undef };
 
 
@@ -133,6 +134,7 @@ get '/addBills' => sub {
          'calander' => $changed,
          'cats' => Get_Categories(),
          'int_date' => $int_date,
+         'ver' => $VERSION,
     },{ layout => undef };
 };
 ###########
@@ -151,6 +153,7 @@ get '/EditBillsViewAll' => sub {
             'todays_date' => $whole_date,
             'AllBills' => $bill_view_all,
             'calander' => $changed,
+            'ver' => $VERSION,
         },{layout => undef};    
 };
 ##########
@@ -164,7 +167,7 @@ get '/ViewBill/:company' => sub {
         $dbh->execute($company);
          
         my $bill_values = $dbh->fetchall_hashref('id');
-        my @bkey =  keys $bill_values;
+        #my @bkey =  keys $bill_values;
 
         
          template 'bill_view',{
@@ -172,17 +175,17 @@ get '/ViewBill/:company' => sub {
             'calander' => $changed,
             'todays_date' => $whole_date,
             'company2' => $company,
-            'company' => $bill_values->{$bkey[0]}{'company'},
-            'cat' => $bill_values->{$bkey[0]}{'cat'},
-            'amt_due' => $bill_values->{$bkey[0]}{'amt_due'},
-            'amt_paid' => $bill_values->{$bkey[0]}{'amt_paid'},
-            'date_due' => $bill_values->{$bkey[0]}{'date_due'},
-            'notes' => $bill_values->{$bkey[0]}{'notes'},
-            'occ' => $bill_values->{$bkey[0]}{'occ'},
-            'reg_amt' => $bill_values->{$bkey[0]}{'reg_amt'},
+            'company' => $bill_values->{1}{'company'},
+            'cat' => $bill_values->{1}{'cat'},
+            'amt_due' => $bill_values->{1}{'amt_due'},
+            'amt_paid' => $bill_values->{1}{'amt_paid'},
+            'date_due' => $bill_values->{1}{'date_due'},
+            'notes' => $bill_values->{1}{'notes'},
+            'occ' => $bill_values->{1}{'occ'},
+            'reg_amt' => $bill_values->{1}{'reg_amt'},
             'cats' => Get_Categories(),
             'int_date' => $int_date,
-            
+            'ver' => $VERSION,
         },{layout => undef};  
 
 };
@@ -196,6 +199,7 @@ post '/search' => sub {
             'searching' => $search,
             'data' => search_bills($search),
              'calander' => $changed,
+             'ver' => $VERSION,
     },{layout => undef};
        
 };
@@ -280,7 +284,7 @@ get '/ViewAll' => sub {
             'todays_date' => $whole_date,
             'calander' => $changed,
             'pass_all' => get_bills_all(),
-            
+            'ver' => $VERSION,
     },{layout => undef};                
 };
 ###########
@@ -290,9 +294,10 @@ get '/ViewLastMonth' => sub {
         template 'last_month',{
             'todays_date' => $whole_date,
             'calander' => $changed,
+            'ver' => $VERSION,
         },{layout => undef};     
 };
-
+#### Perl 5.10 complains about the keys on a hash ref
 get '/PayBill/:name' => sub {
         my $table = current_month_table();
     
@@ -302,15 +307,16 @@ get '/PayBill/:name' => sub {
         $dbh->execute($BillName);
     
         my $bills = $dbh->fetchall_hashref('id');
-        my @bkey =  keys $bills;
+        my $bkey =  keys %{$bills};
     
         template 'PayBill_INFO',{
             'todays_date' => $whole_date,
             'calander' => $changed,
-            'company' => $bills->{$bkey[0]}{company},
-            'date_due' => $bills->{$bkey[0]}{date_due},
-            'amt_due' => $bills->{$bkey[0]}{amt_due},
-            'amt_paid' => $bills->{$bkey[0]}{amt_paid},
+            'company' => $bills->{$bkey}{company},
+            'date_due' => $bills->{$bkey}{date_due},
+            'amt_due' => $bills->{$bkey}{amt_due},
+            'amt_paid' => $bills->{$bkey}{amt_paid},
+            'ver' => $VERSION,
         },{layout => undef};  
 };
 post '/SavePayment' => sub {
@@ -336,6 +342,7 @@ get '/Help' => sub {
     template 'help',{
             'todays_date' => $whole_date,
              'calander' => $changed,
+             'ver' => $VERSION,
     },{layout => undef};   
 };    
 
@@ -349,6 +356,7 @@ get '/ConfirmDel/:coname' => sub {
             'todays_date' => $whole_date,
              'calander' => $changed,
              'co_name' => $company,
+             'ver' => $VERSION,
     },{layout => undef};   
 };
 
@@ -482,35 +490,34 @@ sub CheckForNewMonth {
             
             #create the name of the table for last month
             my $old_month = 'bills_'."$months[$mon-1]".'_'.$year;
-            
             #check to make sure an earlier month exists
-            my $db_check = database->do("SELECT * FROM sqlite_master WHERE name =$old_month and type='table' ");
-            my $check = $db_check->fetch();
+           # my $db_check = database->do("SELECT * FROM sqlite_master WHERE name =$old_month and type='table' ");
+            #my $check = $db_check->fetch();
             
             #return back because the table doesnt exist
-            return if $check == 0;
+            #return if $check == 0;
             
             #if table exists cont.
             my $dbh2 = database->prepare("SELECT * FROM $old_month");
             $dbh2->execute();
             
             #now lets cycle threw the bills for the new month
-            while(my(@rows) = $dbh2->fetchrow_array()){
-                
+            while(my($id,$cat,$date_due,$company,$amt_due,$amt_paid,$date_paid,$notes,$chk_numb,$occ,$over_due,$reg_amt) = $dbh2->fetchrow_array()){
+                   
                 #dancer is complaning about this feild being null
-                $rows[11] = 0 if !exists $rows[11] or !defined $rows[11];
+                $reg_amt = 0 if !$reg_amt;
                 
-                if($rows[9]){ #reoccuring bill
+                if($occ){ #reoccuring bill
                     my ($amount_left,$rollover_amt);
                     
                     #detremine if any will be owed next month or not
-                    if($rows[4] ne $rows[5]){ #amt_due and amt_paid check
+                    if($amt_due ne $amt_paid){ #amt_due and amt_paid check
                         #subtract if amt_due doesnt match amt_paid this will add to next month on top of the reg_amt
-                        $amount_left = $rows[4] > $rows[5] ? $rows[4] - $rows[5] : $rows[5] - $rows[4] ;
-                        $rollover_amt = $amount_left + $rows[11];
+                        $amount_left = $amt_due > $amt_paid ? $amt_due - $amt_paid : $amt_paid - $amt_due ;
+                        $rollover_amt = $amount_left + $reg_amt;
                     }else {#if paid full zero these out
                         $amount_left=0;
-                        $rollover_amt= $rows[11];
+                        $rollover_amt= $reg_amt;
                     }
                     
                     #OLD DB:      cat               0                NEW DB:         id
@@ -529,24 +536,24 @@ sub CheckForNewMonth {
                     
                     #need to change the due date to reflect new month
                     #                       year     month  day
-                    $rows[1] =~ /(\d{4})(\d{2})(\d{2})/;
+                    $date_due =~ /(\d{4})(\d{2})(\d{2})/;
                     my $new_due_date = $1 . $mon2 . $3;
                     
-                    my $int1 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-                    $int1->execute($rows[0],$new_due_date,$rows[3],$rollover_amt,'0','0',$rows[7],$rows[8],$rows[9],$rows[10],$rows[11]);
+                    my $int1 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)") or die ("Table Prep failed to insert into new table");
+                    $int1->execute($id,$new_due_date,$company,$rollover_amt,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt);
                     #non-reoccuring bill
                 }else {
                     #calulate if any was paid (making sure me dont make an negative ammount)
-                    my $amout_left = $rows[4] > $rows[5] ? $rows[4] - $rows[5] : $rows[5] - $rows[4] ;
+                    my $amout_left = $amt_due > $amt_paid ? $amt_due - $amt_paid : $amt_paid - $amt_due ;
                     
                     #if there's still an ammount then roll-over
                     if($amout_left){
                         #change the old month to the new month
-                        $rows[1] =~ /(\d{4})(\d{2})(\d{2})/;
+                        $date_due =~ /(\d{4})(\d{2})(\d{2})/;
                         my $new_due_date1 = $1 . $mon2 . $3;
                         
                         my $int2 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-                            $int2->execute($rows[0],$new_due_date1,$rows[3],$amout_left,'0','0',$rows[7],$rows[8],$rows[9],$rows[10],$rows[11]);
+                            $int2->execute($id,$new_due_date1,$company,$amout_left,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt);
                     }else {
                         #if this bill has been paid and not reoccurring skip it
                         next;
@@ -679,20 +686,17 @@ sub get_bills {
         
         my $saved;
         my $todays = DateTime->now();
-        $todays =~ /(\d{4})-(\d+)-(\d{2})/;
-        
-        my $coverted_today = $1 . $2 . $3;
-    
-       my $projected_date = $dt->add( days => 10 ) ;
+
+       my $projected_date = $todays->add( days => 10 ) ;
     #dateTime module returns an odd format so filter it to whats needed...2012-02-21T01:45:00PM (FORMAT)
         $projected_date =~ /(\d{4})-(\d+)-(\d{2})/;
     #                                       year   mon  mday
        #$saved = $1 . '0' . $2 . $3 if $2 =~ /^\d{1}$/;
        $saved = $1 . $2 . $3 ;
-
+        my $start_date = $1 . $2 . '01';
        
         # = selectrow_hashref('SELECT company, amt_due, date_due FROM bills WHERE due_date = ?', undef, $saved_date);
-       my  $dbh = database->prepare("SELECT id,company,date_due,amt_due,amt_paid  FROM $table  where date_due between $coverted_today and $saved AND amt_paid < amt_due");
+       my  $dbh = database->prepare("SELECT id,company,date_due,amt_due,amt_paid  FROM $table  WHERE date_due BETWEEN $start_date AND  $saved AND amt_paid < amt_due ");
         
         $dbh->execute();
     
