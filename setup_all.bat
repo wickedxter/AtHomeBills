@@ -1,4 +1,17 @@
-#!perl
+@rem = '--*-Perl-*--
+@echo off
+if "%OS%" == "Windows_NT" goto WinNT
+perl -x -S "%0" %1 %2 %3 %4 %5 %6 %7 %8 %9
+goto endofperl
+:WinNT
+perl -x -S %0 %*
+if NOT "%COMSPEC%" == "%SystemRoot%\system32\cmd.exe" goto endofperl
+if %errorlevel% == 9009 echo You do not have Perl in your PATH.
+if errorlevel 1 goto script_failed_so_exit_with_non_zero_val 2>nul
+goto endofperl
+@rem ';
+#!/usr/bin/perl
+#line 15
 
 ################################
 #   AT Home Bills
@@ -45,7 +58,7 @@ $year += 1900;
 
 
 
-say "Welcome to AtHomeBills v1.0.9 setup v1.0.0..";
+say "Welcome to AtHomeBills v1.0.11.1 setup v1.0.1   ..........";
 
 say "Base Dir: $base is being used for setup..";
 
@@ -84,7 +97,8 @@ $dbh->do("CREATE TABLE IF NOT EXISTS $new_table (id INTEGER PRIMARY KEY AUTOINCR
                                                                               chk_numb NUMERIC,
                                                                               occ NUMERIC,
                                                                               overdue NUMERIC,
-                                                                              reg_amt NUMERIC)") or say "Error Creating Table\n";
+                                                                              reg_amt NUMERIC,
+                                                                              bill_url TEXT)") or say "Error Creating Table\n";
 say "created table $new_table";
 $dbh->do("CREATE TABLE IF NOT EXISTS main_page (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                                                                               date TEXT,
@@ -92,14 +106,19 @@ $dbh->do("CREATE TABLE IF NOT EXISTS main_page (id INTEGER PRIMARY KEY AUTOINCRE
                                                                               posts TEXT)") or say "Error Creating Table main_page\n";
 say "created table main_page";
 $dbh->do("CREATE TABLE IF NOT EXISTS current_month (NOM text)") or say "Error Creating Table\n";
-say "creating table companies";
-$dbh->do("CREATE TABLE IF NOT EXISTS companies (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                                                                  company TEXT,
-                                                                                  website TEXT,)") or say "Error Creating Table\n";
+#say "creating table companies";
+#$dbh->do("CREATE TABLE IF NOT EXISTS companies (id INTEGER PRIMARY KEY AUTOINCREMENT,
+#                                                                                  company TEXT,
+ #                                                                                 website TEXT,)") or say "Error Creating Table\n";
 
 my $sth = $dbh->prepare("INSERT INTO current_month ('NOM') VALUES (?) ") or say "Error updateing table current_month\n";
 $sth->execute($months[$mon]);
 
 say "created current_month";
 
-print "Done...\n";
+print "Done...\n\n";
+
+
+sleep(25);
+__END__
+:endofperl

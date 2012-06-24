@@ -183,11 +183,12 @@ img.right {float:right;margin:0 0 0 20px}
 							</tr>
 
 							<% FOREACH bill IN pass_all.keys %>
+							<% amt_left = pass_all.$bill.amt_due - pass_all.$bill.amt_paid %>
 							<tr>
 								<td style="width: 112px; height: 43px" valign="middle" class="auto-style5"><% pass_all.$bill.company %></td>
 								<td class="auto-style5" style="height: 43px; width: 75px;" valign="middle"><% pass_all.$bill.date_due %></td>
 								<td class="auto-style5" style="height: 43px; width: 63px;" valign="middle">$ <% pass_all.$bill.amt_paid %></td>
-								<td class="auto-style5" style="height: 43px; width: 70px;" valign="middle">$ <% pass_all.$bill.amt_due %></td>
+								<td class="auto-style5" style="height: 43px; width: 70px;" valign="middle">$ <% amt_left %></td>
 								<td style="height: 43px" valign="middle" class="auto-style5">
 								<% IF  pass_all.$bill.amt_paid == pass_all.$bill.amt_due or pass_all.$bill.amt_paid > pass_all.$bill.amt_due %>	
 								PAID / <a href="/ConfirmDel/<% pass_all.$bill.company %>">DELETE</a>

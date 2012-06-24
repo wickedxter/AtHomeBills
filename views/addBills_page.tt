@@ -212,14 +212,47 @@ img.right {float:right;margin:0 0 0 20px}
 						<td class="auto-style6" style="width: 147px">Regular 
 						Amount Due</td>
 						<td class="auto-style6">
-						<input name="reg_amt_due" type="text" /></td>
+						<input name="reg_amt_due" type="text" value="0" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Bill Site URL</td>
+						<td class="auto-style6">
+						<input name="bill_url" type="text" value="http://" /></td>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">&nbsp;</td>
 						<td class="auto-style6">
 						<input type="submit" value="Save Bill" /></form></td>
 					</tr>
+				</table><br><br>
+				
+				<% IF cal_click.size %>
+				<div class=".auto-style6">
+				<br><center>
+				found Some Bills that are alredy on the same date..
+				<br></center>
+				</div>
+
+				<table style="width: 88%" align="center">
+					<tr>
+						<td class="style1" style="width: 221px"><strong>Company</strong></td>
+						<td class="style1" style="width: 232px"><strong>Amount Due</strong></td>
+						<td class="style1" style="width: 198px"><strong>Amount Paid</strong></td>
+						<td class="style1" style="width: 198px"><strong>Date Due</strong></td>
+					</tr>
+
+					<% FOREACH bill IN cal_click.keys %>
+					<tr>
+						<td class="style1" style="width: 221px"><a href="./ViewBill/<% cal_click.$bill.company %>"><% cal_click.$bill.company %></a></td>
+						<td class="style1" style="width: 232px"><% cal_click.$bill.amt_due %></td>
+						<td class="style1" style="width: 198px"><% cal_click.$bill.amt_paid %></td>
+						<td class="style1" style="width: 198px"><% cal_click.$bill.date_due %></td>
+					</tr>
+				
+					<% END %>
 				</table>
+				<% END %>
+
 			</div>
 		</div>
 		<div id="sidebar2" class="sidebar">

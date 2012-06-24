@@ -10,21 +10,21 @@ if %errorlevel% == 9009 echo You do not have Perl in your PATH.
 if errorlevel 1 goto script_failed_so_exit_with_non_zero_val 2>nul
 goto endofperl
 @rem ';
-#!perl
+#!/usr/bin/perl
 #line 15
 
 
 use FindBin;
-use lib $FindBin::Bin;
+use lib ("$FindBin::Bin/lib");
 
 use strict;
 use warnings;
 use DateTime;
 use Dancer;
 use Dancer::Plugin::Database;
-use Dancer::Exception qw(:all);
-use HTML::Calendar::Simple;
+use HTML::Calendar::Simple; #this was altered because it printed the table borders.
 use Data::Dumper;
+
 
 
 ################################
@@ -44,7 +44,7 @@ use Data::Dumper;
 # GUI program.
 ################################
 
-our $VERSION = 'v1.0.10 build 3';
+our $VERSION = 'v1.0.11.1';
 
 #################
 # Date and time
@@ -78,24 +78,38 @@ my $whole_date = $today_date . ' ' . $today_time;
 
 my $search_date = $year . $mon2 . $mday2;
 
-my $cal = HTML::Calendar::Simple->new;
-
-my $int_date = $year . $mon2;
-#Since the calendar module doesnt allow customization had to add CSS
-    #to match the layouts
-my $changed = $cal->calendar_month;
-    $changed =~ s/\>$mday\</\>\<font class\=calender_current_day\>\>$mday\<\<\/font\>\</;
-    
+#This handles the calendar thats on the main page
+my $changed = display_calendar();
+ 
+#this combiles the year and the month
+my $int_date = $year . $mon2;   
 ################
 # End of date comp
 ################
 
+#Since the database table keeps changeing and making all these changes
+#and making patches for each altering of the colums is rather uneeded and pain stakeing
+#so this will eliminate any need for any patch to add the columns to the tables.
+#This should not run but once, i hope....
+###
+#Database has changed version and date
+# v1.0.11.1, 06/15/12
+my $DB = ['cat TEXT', 'date_due TEXT', 'company TEXT',
+          'amt_due NUMERIC', 'amt_paid NUMERIC', 'date_paid TEXT',
+          'notes TEXT', 'chk_numb NUMERIC', 'occ NUMERIC',
+          'overdue NUMERIC', 'reg_amt NUMERIC', 'bill_url TEXT'];
+#This is what columns are needed to run this version of the program
+# so if the columns dont exits they will be created.
 
+Table_DB_Concurrency($DB);
 
-
-###############
+#/----------------------------------------------------
+#
 # Routes for dancer
-###############
+#
+#/---------------------------------------------------
+
+
 #where to travel? do we need a GPS? whos got the snacks?
 
 ###########
@@ -104,7 +118,7 @@ get '/' => sub {
     
     ################
     #Handle new month roll-over
-    #This goes thew the database resting bills for the new month
+    #This goes therw the database resetting bills for the new month
     # or adding to the unpaid bills.
     ################
    
@@ -126,15 +140,34 @@ get '/' => sub {
 ###########
 # Add Page
 get '/addBills' => sub {
-    
-    
-    
+       
     template 'addBills_page' => {
         'todays_date' => $whole_date,
          'calander' => $changed,
          'cats' => Get_Categories(),
          'int_date' => $int_date,
          'ver' => $VERSION,
+    },{ layout => undef };
+};
+#################
+# Add Page from calendar click
+get '/addbills/:date' => sub {
+    
+    my $date = params->{date};
+    my $table = current_month_table();
+    
+    my  $dbh = database->prepare("SELECT id,company,amt_due,amt_paid,date_due  FROM $table WHERE date_due = ?");
+    $dbh->execute($date);
+    
+    my $bills_date = $dbh->fetchall_hashref('id');
+    
+    template 'addBills_page' => {
+        'todays_date' => $whole_date,
+         'calander' => $changed,
+         'cats' => Get_Categories(),
+         'int_date' => $date,
+         'ver' => $VERSION,
+         'cal_click' => $bills_date,
     },{ layout => undef };
 };
 ###########
@@ -167,25 +200,27 @@ get '/ViewBill/:company' => sub {
         $dbh->execute($company);
          
         my $bill_values = $dbh->fetchall_hashref('id');
-        #my @bkey =  keys $bill_values;
+        my @bkey =  keys $bill_values;
 
+        #change the amount of amt due
+        my $new_amt_due = $bill_values->{$bkey[0]}{'amt_due'} - $bill_values->{$bkey[0]}{'amt_paid'};
         
          template 'bill_view',{
-           # 'mykey' => $bkey[0],
             'calander' => $changed,
             'todays_date' => $whole_date,
             'company2' => $company,
-            'company' => $bill_values->{1}{'company'},
-            'cat' => $bill_values->{1}{'cat'},
-            'amt_due' => $bill_values->{1}{'amt_due'},
-            'amt_paid' => $bill_values->{1}{'amt_paid'},
-            'date_due' => $bill_values->{1}{'date_due'},
-            'notes' => $bill_values->{1}{'notes'},
-            'occ' => $bill_values->{1}{'occ'},
-            'reg_amt' => $bill_values->{1}{'reg_amt'},
+            'company' => $bill_values->{$bkey[0]}{'company'},
+            'cat' => $bill_values->{$bkey[0]}{'cat'},
+            'amt_due' => $new_amt_due,
+            'amt_paid' => $bill_values->{$bkey[0]}{'amt_paid'},
+            'date_due' => $bill_values->{$bkey[0]}{'date_due'},
+            'notes' => $bill_values->{$bkey[0]}{'notes'},
+            'occ' => $bill_values->{$bkey[0]}{'occ'},
+            'reg_amt' => $bill_values->{$bkey[0]}{'reg_amt'},
             'cats' => Get_Categories(),
             'int_date' => $int_date,
             'ver' => $VERSION,
+            'bill_url' => $bill_values->{$bkey[0]}{bill_url},
         },{layout => undef};  
 
 };
@@ -216,7 +251,7 @@ post '/SaveBillInfo' => sub {
         #db order: cat date_due company amt_due amt_paid date_paid notes chk_num occ overdue reg_amt    
         my  $dbh = database->prepare("INSERT INTO $table (cat,date_due,company,amt_due,
                                                                                       amt_paid,date_paid,notes,chk_numb,
-                                                                                      occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+                                                                                      occ,overdue,reg_amt,bill_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
             
              $category =   params->{cat} if params->{cat} and !params->{cat_other};
              $category =   params->{cat_other} if params->{cat_other} and !params->{cat};
@@ -229,7 +264,7 @@ post '/SaveBillInfo' => sub {
                                     0,params->{date_paid},
                                     params->{notes},params->{chk_num},
                                     params->{occ},params->{overdue},
-                                    params->{reg_amt_due});
+                                    params->{reg_amt_due},params->{bill_url});
         
         my $company = params->{company};
         my $date_due = params->{date_due};
@@ -258,6 +293,7 @@ post '/SaveBillChanges/:companyName' => sub {
         my $overdue = params->{overdue};
         my $reg_amt = params->{reg_amt};
         my $date_paid = params->{date_paid};
+        my $bill_url = params->{bill_url};
         
         my  $dbh = database->prepare("UPDATE $table SET cat=?,
                                                                                     date_due=?,
@@ -269,9 +305,10 @@ post '/SaveBillChanges/:companyName' => sub {
                                                                                     chk_numb=?,
                                                                                     occ=?,
                                                                                     overdue=?,
-                                                                                    reg_amt=? WHERE company = ?");
+                                                                                    reg_amt=?
+                                                                                    bill_url=? WHERE company = ?");
         
-        $dbh->execute($category,$due_date,$name,$amt_due,$amt_paid,$date_paid,$notes,$chk_num,$occ,$overdue,$reg_amt,$companyName);
+        $dbh->execute($category,$due_date,$name,$amt_due,$amt_paid,$date_paid,$notes,$chk_num,$occ,$overdue,$reg_amt,$companyName,$bill_url);
         
         WriteMainPage("Changed Bill info","Changes to $companyName have been saved");
         return redirect '/';
@@ -303,19 +340,23 @@ get '/PayBill/:name' => sub {
     
     
         my $BillName = params->{name};
-        my  $dbh = database->prepare("SELECT *  FROM $table WHERE company = ? LIMIT 1");
+        my  $dbh = database->prepare("SELECT id,company,date_due,amt_due,amt_paid,bill_url  FROM $table WHERE company = ?");
         $dbh->execute($BillName);
     
         my $bills = $dbh->fetchall_hashref('id');
-        my $bkey =  keys %{$bills};
+        my @bkey =  keys %{$bills};
+    
+        #subtract amt_paid from amt_due
+        my $new_amt_due =  $bills->{$bkey[0]}{amt_due} - $bills->{$bkey[0]}{amt_paid};
     
         template 'PayBill_INFO',{
             'todays_date' => $whole_date,
             'calander' => $changed,
-            'company' => $bills->{$bkey}{company},
-            'date_due' => $bills->{$bkey}{date_due},
-            'amt_due' => $bills->{$bkey}{amt_due},
-            'amt_paid' => $bills->{$bkey}{amt_paid},
+            'company' => $bills->{$bkey[0]}{company},
+            'date_due' => $bills->{$bkey[0]}{date_due},
+            'amt_due' => $new_amt_due,
+            'amt_paid' => $bills->{$bkey[0]}{amt_paid},
+            'bill_url' => $bills->{$bkey[0]}{bill_url},
             'ver' => $VERSION,
         },{layout => undef};  
 };
@@ -385,18 +426,70 @@ Dancer->dance;
 
 
 
-##########################
+#/*********************************************************
 #
 # SUBRUTINES
 #
-############
+#/*********************************************************
 
-sub Load_Exp {
+sub Table_DB_Concurrency {
+    my ($tables,@new);
+    my $current_tables = shift; #current table columns as of current version
+    my $this_month = current_month_table();
     
-    #register_exception('NoPermission',
-      #              message_pattern => "not enough permission: %s"
-       #           );
+    #get the table info from database
+    $tables = database->selectall_hashref("PRAGMA table_info($this_month)",'name');
+    
+    #go threw and check for ones that dont exists in current database and add them
+    foreach my $c_table (@{$current_tables}){
+                 my ($name, $kind) = split / /, $c_table;
+            foreach (keys %{$tables}){
+                if (!exists $tables->{$name}){
+                    push @new, "$name $kind";
+                    last;
+                }else {
+                    next;
+                }
+            }
+    }
+    
+    for (@new){
+        my ($new_name,$new_type) = split / /, $_;
+        
+        my $dbh = database->prepare("ALTER TABLE $this_month ADD COLUMN $new_name $new_type");
+        $dbh->execute();
+        
+    }
+    
 }
+
+sub display_calendar {
+    
+    my $cal = HTML::Calendar::Simple->new;
+    #my $DT = DateTime->new(year => $year, month => $mon2);
+    
+    my $total_days = DateTime->last_day_of_month( year => $year, month => $mon2);
+    $total_days =~ /\d{4}-\d+-(\d+)\w/;
+    
+    for my $day (1..$1){
+        
+        if ($day !~ /\d{2}/){ $day = '0' . "$day"; }
+        
+        my $link = "/addbills/2012".$mon2.$day;
+        
+        $cal->daily_info({ 'day'  => $day,
+                     'day_link' => $link,
+                     'link'     => [$link,],});
+    }
+    
+    #Since the calendar module doesnt allow customization had to add CSS
+    #to match the layouts
+    my $changed = $cal->calendar_month;
+        $changed =~ s/\>$mday\</\>\<font class\=calender_current_day\>\>$mday\<\<\/font\>\</;
+        
+        return $changed;
+}
+
 
 #-----------------------------------------------------------------------
 # current_month_table();
@@ -485,7 +578,8 @@ sub CheckForNewMonth {
                                                                               chk_numb NUMERIC,
                                                                               occ NUMERIC,
                                                                               overdue NUMERIC,
-                                                                              reg_amt NUMERIC)");
+                                                                              reg_amt NUMERIC,
+                                                                              bill_url TEXT)");
             
             
             #create the name of the table for last month

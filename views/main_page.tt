@@ -171,10 +171,11 @@ img.right {float:right;margin:0 0 0 20px}
 						<!-- UPCOMMING BILLS-->
 						
 							<% FOREACH id IN upcomming.keys.sort%>
+							<% new_amt_up = upcomming.$id.amt_due - upcomming.$id.amt_paid%>
 							<tr>
 							<td class="auto-style3" style="width: 159px"><% upcomming.$id.company %></td>
 							<td class="auto-style3" style="width: 142px"><% upcomming.$id.date_due %></td>
-							<td class="auto-style3">$<% upcomming.$id.amt_due %></td>
+							<td class="auto-style3">$<% new_amt_up %></td>
 							</tr>
 							<% END %>
 						</table>
@@ -187,10 +188,11 @@ img.right {float:right;margin:0 0 0 20px}
 						<td>
 						<table class="over_due" style="width: 100%">
 							<% FOREACH id IN over_due.keys.sort %>
+							<% new_amt_o = upcomming.$id.amt_due - upcomming.$id.amt_paid%>
 							<tr>
 								<td class="auto-style3" style="width: 159px"><% over_due.$id.company %></td>
 								<td class="auto-style3" style="width: 142px"><% over_due.$id.date_due %></td>
-								<td class="auto-style3">$<% over_due.$id.amt_due %></td>
+								<td class="auto-style3">$<% new_amt_o %></td>
 							</tr>
 							<% END %>
 							

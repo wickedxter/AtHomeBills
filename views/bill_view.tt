@@ -229,6 +229,11 @@ img.right {float:right;margin:0 0 0 20px}
 						<input name="reg_amt_due" type="text" value="<% reg_amt %>" /></td>
 					</tr>
 					<tr>
+						<td class="auto-style6" style="width: 147px">Bill Url</td>
+						<td class="auto-style6">
+						<input name="reg_amt_due" type="text" value="<% bill_url %>" /></td>
+					</tr>
+					<tr>
 						<td class="auto-style6" style="width: 147px">&nbsp;</td>
 						<td class="auto-style6">
 						<input type="submit" value="Save Bill Changes" /></form></td>

@@ -168,16 +168,26 @@ img.right {float:right;margin:0 0 0 20px}
 						First, you will need to add bill(s) to the service click the Add bills link and fill out the form.
 						Next submit it and besure to check back because the main page will display bills upcomming
 						in 10 days and what are overdue.<br><br>
-						
+						<br>
 						You can edit the bills information at anytime using the search or Edit Bills link of the Nav. Menu.<BR><BR>
+						<br>
+						<b>NOTE: This service in no way is connected to the intranet, it is a standalone program with its own web server
+						prividied by the Perl Dancer Framework. Don't forget to check for updates.</b>
+						<br /><br><br>
+						AtHomeBills started as a home project because I figured it would be a great and plus the exp. would be great
+						so. AtHomeBills was very basic and used flat-files for its database which was a big pain. The program you see now
+						is such a big improvement from what it was before, no framework which ment hand making every page and if I had
+						to change one thing ment changeing everything. Template Toolkit is such a great thing so is Dancer.
 						
-						NOTE: This service in no way is connected to the intranet, it is a standalone program with its own web server
-						prividied by the Perl Dancer Framework. Don't forget to check for updates.
-						<br />
 						<br />
 						<br />
 						REVISION:<br />
 						<hr /><br />
+						v1.0.11<br />
+						-= Calendar now is clickable and will take you to add bill screen and the date will automaticly change. Also shows you if their
+						     are any bills on that date or not.<br>
+						-= Now any changes to the database will happen automaticly and no need for a patch.<br>
+						<br>
 						v1.010.3<br />
 						-= Worked fixing the bugs that poped up for Perl 5.10<br>
 						-= Once new month rolled around the bills didnt roll-over, it should be fixed across the bord. Ill roll out a database fix.<br>

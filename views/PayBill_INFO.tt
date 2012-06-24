@@ -159,8 +159,8 @@ img.right {float:right;margin:0 0 0 20px}
 						<td style="height: 26px" class="auto-style6"><% todays_date %></td>
 					</tr>
 					<tr>
-						<td style="height: 353px" valign="top"><form action="/SavePayment" method="post">
-						<table style="width: 100%; height: 79px">
+						<td style="height: 353px" valign="top" class="auto-style6"><form action="/SavePayment" method="post">
+						<table style="width: 100%; height: 79px"><% bkey %>
 							<tr>
 								<td class="auto-style6" style="width: 190px">How 
 								Much to Pay</td>
@@ -191,9 +191,11 @@ img.right {float:right;margin:0 0 0 20px}
 								<td style="height: 39px"></td>
 							</tr>
 						</table></form>
+						<div class="auto-style6">
+							[<a target="_blank" href="<% bill_url %>">TAKE ME TO WEBSITE</a>]<br />
 						<br />
 						<br />
-						<br />
+						</div>
 						<table style="width: 100%; height: 62px">
 							<tr>
 								<td class="auto-style6" style="height: 22px; width: 94px;">
