@@ -183,6 +183,10 @@ img.right {float:right;margin:0 0 0 20px}
 						<br />
 						REVISION:<br />
 						<hr /><br />
+						v1.0.12<br />
+						-= More bug fixes and now you can supply a bill late fee. It will show a warning and add to the amount thats owed on the
+						pay bill page.<br>
+						<br>
 						v1.0.11<br />
 						-= Calendar now is clickable and will take you to add bill screen and the date will automaticly change. Also shows you if their
 						     are any bills on that date or not.<br>

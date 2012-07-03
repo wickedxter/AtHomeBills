@@ -44,7 +44,7 @@ use Data::Dumper;
 # GUI program.
 ################################
 
-our $VERSION = 'v1.0.11.1';
+our $VERSION = 'v1.0.12';
 
 #################
 # Date and time
@@ -61,8 +61,8 @@ my @days = qw(Sunday Monday Tuesday Wednsday Thrusday Friday Saturday);
 $year += 1900;
 
 
-my $mon2 = $mon  =~ /\d{2}/ ? $mon : '0'.$mon; # this makes 2 to 02
-my $mday2 = $mday =~ /\d{2}/ ? $mday : '0'.$mday; # this makes 2 to 02
+our $mon2 = $mon  =~ /\d{2}/ ? $mon : '0'.$mon; # this makes 2 to 02
+our $mday2 = $mday =~ /\d{2}/ ? $mday : '0'.$mday; # this makes 2 to 02
 
 
 
@@ -97,7 +97,7 @@ my $int_date = $year . $mon2;
 my $DB = ['cat TEXT', 'date_due TEXT', 'company TEXT',
           'amt_due NUMERIC', 'amt_paid NUMERIC', 'date_paid TEXT',
           'notes TEXT', 'chk_numb NUMERIC', 'occ NUMERIC',
-          'overdue NUMERIC', 'reg_amt NUMERIC', 'bill_url TEXT'];
+          'overdue NUMERIC', 'reg_amt NUMERIC', 'bill_url TEXT','bill_late_fee NUMERIC'];
 #This is what columns are needed to run this version of the program
 # so if the columns dont exits they will be created.
 
@@ -216,11 +216,12 @@ get '/ViewBill/:company' => sub {
             'date_due' => $bill_values->{$bkey[0]}{'date_due'},
             'notes' => $bill_values->{$bkey[0]}{'notes'},
             'occ' => $bill_values->{$bkey[0]}{'occ'},
-            'reg_amt' => $bill_values->{$bkey[0]}{'reg_amt'},
+            'reg_amt_due' => $bill_values->{$bkey[0]}{'reg_amt'},
             'cats' => Get_Categories(),
             'int_date' => $int_date,
             'ver' => $VERSION,
             'bill_url' => $bill_values->{$bkey[0]}{bill_url},
+            'bill_late_fee' => $bill_values->{$bkey[0]}{bill_late_fee}
         },{layout => undef};  
 
 };
@@ -251,20 +252,18 @@ post '/SaveBillInfo' => sub {
         #db order: cat date_due company amt_due amt_paid date_paid notes chk_num occ overdue reg_amt    
         my  $dbh = database->prepare("INSERT INTO $table (cat,date_due,company,amt_due,
                                                                                       amt_paid,date_paid,notes,chk_numb,
-                                                                                      occ,overdue,reg_amt,bill_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+                                                                                      occ,overdue,reg_amt,bill_url,bill_late_fee) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             
-             $category =   params->{cat} if params->{cat} and !params->{cat_other};
-             $category =   params->{cat_other} if params->{cat_other} and !params->{cat};
              
              #Some SQL statements require that some data not be null have to set it to 0
             #the 0 here is the amt_paid since its just been added set it to 0
         
-            $dbh->execute($category,params->{date_due},
+            $dbh->execute(params->{cat_other},params->{date_due},
                                     params->{company},params->{amt_due},
                                     0,params->{date_paid},
                                     params->{notes},params->{chk_num},
                                     params->{occ},params->{overdue},
-                                    params->{reg_amt_due},params->{bill_url});
+                                    params->{reg_amt_due},params->{bill_url},params->{bill_late_fee});
         
         my $company = params->{company};
         my $date_due = params->{date_due};
@@ -291,24 +290,14 @@ post '/SaveBillChanges/:companyName' => sub {
         my $chk_num = params->{chk_numb};
         my $occ = params->{occ};
         my $overdue = params->{overdue};
-        my $reg_amt = params->{reg_amt};
+        my $reg_amt = params->{reg_amt_due};
         my $date_paid = params->{date_paid};
         my $bill_url = params->{bill_url};
+        my $bill_late_fee = params->{bill_late_fee};
         
-        my  $dbh = database->prepare("UPDATE $table SET cat=?,
-                                                                                    date_due=?,
-                                                                                    company=?,
-                                                                                    amt_due=?,
-                                                                                    amt_paid=?,
-                                                                                    date_paid=?,
-                                                                                    notes=?,
-                                                                                    chk_numb=?,
-                                                                                    occ=?,
-                                                                                    overdue=?,
-                                                                                    reg_amt=?
-                                                                                    bill_url=? WHERE company = ?");
+        my  $dbh = database->prepare("UPDATE $table SET cat=?,date_due=?,company=?,amt_due=?,amt_paid=?,date_paid=?,notes=?,chk_numb=?,occ=?,overdue=?,reg_amt=?,bill_url=?,bill_late_fee=? WHERE company='$name'");
         
-        $dbh->execute($category,$due_date,$name,$amt_due,$amt_paid,$date_paid,$notes,$chk_num,$occ,$overdue,$reg_amt,$companyName,$bill_url);
+        $dbh->execute($category,$due_date,$name,$amt_due,$amt_paid,$date_paid,$notes,$chk_num,$occ,$overdue,$reg_amt,$bill_url,$bill_late_fee);
         
         WriteMainPage("Changed Bill info","Changes to $companyName have been saved");
         return redirect '/';
@@ -337,10 +326,10 @@ get '/ViewLastMonth' => sub {
 #### Perl 5.10 complains about the keys on a hash ref
 get '/PayBill/:name' => sub {
         my $table = current_month_table();
-    
+        my $late_charge =0;
     
         my $BillName = params->{name};
-        my  $dbh = database->prepare("SELECT id,company,date_due,amt_due,amt_paid,bill_url  FROM $table WHERE company = ?");
+        my  $dbh = database->prepare("SELECT id,company,date_due,amt_due,amt_paid,bill_url,bill_late_fee  FROM $table WHERE company = ?");
         $dbh->execute($BillName);
     
         my $bills = $dbh->fetchall_hashref('id');
@@ -349,14 +338,24 @@ get '/PayBill/:name' => sub {
         #subtract amt_paid from amt_due
         my $new_amt_due =  $bills->{$bkey[0]}{amt_due} - $bills->{$bkey[0]}{amt_paid};
     
+        #this is to see if a late fee is to be applied
+        my $duedate = DateSlash($bills->{$bkey[0]}{date_due});
+        my ($m, $d, $y) = split /\//, $duedate;
+        
+        #this checks if date has passed.
+        $late_charge = 1 if($mday2 > $d);
+    
         template 'PayBill_INFO',{
             'todays_date' => $whole_date,
             'calander' => $changed,
             'company' => $bills->{$bkey[0]}{company},
-            'date_due' => $bills->{$bkey[0]}{date_due},
+            'date_due' => DateSlash($bills->{$bkey[0]}{date_due}),
             'amt_due' => $new_amt_due,
             'amt_paid' => $bills->{$bkey[0]}{amt_paid},
             'bill_url' => $bills->{$bkey[0]}{bill_url},
+            'bill_late' => $bills->{$bkey[0]}{bill_late_fee},
+            'late_charge' => $late_charge,
+            'mday' => $mday2,
             'ver' => $VERSION,
         },{layout => undef};  
 };
@@ -431,6 +430,15 @@ Dancer->dance;
 # SUBRUTINES
 #
 #/*********************************************************
+
+sub DateSlash {
+    my $date = shift;
+    #2012 08 23
+    substr $date, 4, 0, '/';
+    substr $date, 7, 0, '/';
+
+    return $date;
+}
 
 sub Table_DB_Concurrency {
     my ($tables,@new);
@@ -579,7 +587,8 @@ sub CheckForNewMonth {
                                                                               occ NUMERIC,
                                                                               overdue NUMERIC,
                                                                               reg_amt NUMERIC,
-                                                                              bill_url TEXT)");
+                                                                              bill_url TEXT,
+                                                                              bill_late_fee NUMERIC)");
             
             
             #create the name of the table for last month
@@ -596,7 +605,7 @@ sub CheckForNewMonth {
             $dbh2->execute();
             
             #now lets cycle threw the bills for the new month
-            while(my($id,$cat,$date_due,$company,$amt_due,$amt_paid,$date_paid,$notes,$chk_numb,$occ,$over_due,$reg_amt) = $dbh2->fetchrow_array()){
+            while(my($id,$cat,$date_due,$company,$amt_due,$amt_paid,$date_paid,$notes,$chk_numb,$occ,$over_due,$reg_amt,$bill_url,$bill_late_fee) = $dbh2->fetchrow_array()){
                    
                 #dancer is complaning about this feild being null
                 $reg_amt = 0 if !$reg_amt;
@@ -633,8 +642,8 @@ sub CheckForNewMonth {
                     $date_due =~ /(\d{4})(\d{2})(\d{2})/;
                     my $new_due_date = $1 . $mon2 . $3;
                     
-                    my $int1 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)") or die ("Table Prep failed to insert into new table");
-                    $int1->execute($id,$new_due_date,$company,$rollover_amt,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt);
+                    my $int1 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt,bill_url,bill_late_fee) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)") or die ("Table Prep failed to insert into new table");
+                    $int1->execute($cat,$new_due_date,$company,$rollover_amt,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt,$bill_url,$bill_late_fee);
                     #non-reoccuring bill
                 }else {
                     #calulate if any was paid (making sure me dont make an negative ammount)
@@ -646,8 +655,8 @@ sub CheckForNewMonth {
                         $date_due =~ /(\d{4})(\d{2})(\d{2})/;
                         my $new_due_date1 = $1 . $mon2 . $3;
                         
-                        my $int2 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-                            $int2->execute($id,$new_due_date1,$company,$amout_left,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt);
+                        my $int2 = database->prepare("INSERT INTO $new_table (cat,date_due,company,amt_due,amt_paid,date_paid,notes,chk_numb,occ,overdue,reg_amt,bill_url,bill_late_fee) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            $int2->execute($cat,$new_due_date1,$company,$amout_left,'0','0',$notes,$chk_numb,$occ,$over_due,$reg_amt,$bill_url,$bill_late_fee);
                     }else {
                         #if this bill has been paid and not reoccurring skip it
                         next;
@@ -671,7 +680,7 @@ sub CheckForNewMonth {
 #-----------------------------------------------------------------------
 sub Get_Categories {
     
-    my @cats = ('Power', 'Mortage/Rent', 'Car/Truck Note', 'Car/Truck Insurance', 'Credit Card1', 'Credit Card2',  'Natural Gas', 'Phone', 'Student Loan','Water Bill');
+    my @cats = ('Power', 'Mortage/Rent', 'Car/Truck Note', 'Car/Truck Insurance', 'Credit Card1', 'Credit Card2',  'Natural Gas', 'Phone', 'Student Loan','Water Bill','Other');
     
     return \@cats;
 }

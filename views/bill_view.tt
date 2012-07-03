@@ -176,12 +176,15 @@ img.right {float:right;margin:0 0 0 20px}
 						<option selected="selected" value="">------ Select ------
 						</option>
 						<% FOREACH single = cats%>
-						<option value="<% single %>"><% single %></option>
+							<% IF single == cat %>
+								<option  selected="selected" value="<% single %>"><% single %></option>
+							<% ELSE %>
+								<option value="<% single %>"><% single %></option>
+							<% END %>
 						<% END %>
 						</option>
-						</select><br>
-						---OTHER---<br>
-						<input name="cat" type="text" value="<% cat %>" />
+						</select>
+						
 						
 						</td>
 					</tr>
@@ -226,12 +229,17 @@ img.right {float:right;margin:0 0 0 20px}
 						<td class="auto-style6" style="width: 147px">Regular 
 						Amount Due</td>
 						<td class="auto-style6">
-						<input name="reg_amt_due" type="text" value="<% reg_amt %>" /></td>
+						<input name="reg_amt_due" type="text" value="<% reg_amt_due %>" /></td>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">Bill Url</td>
 						<td class="auto-style6">
-						<input name="reg_amt_due" type="text" value="<% bill_url %>" /></td>
+						<input name="bill_url" type="text" value="<% bill_url %>" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Bill Late Fee</td>
+						<td class="auto-style6">
+						<input name="bill_late_fee" type="text" value="<% bill_late_fee %>" /></td>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">&nbsp;</td>

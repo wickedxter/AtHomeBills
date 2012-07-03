@@ -161,7 +161,7 @@ img.right {float:right;margin:0 0 0 20px}
 			<div class="auto-style5">
 				<% todays_date %></div>
 			<div class="post" style="height: 295px">
-				<table style="width: 100%; height: 316px"><form action="./SaveBillInfo" method="post">
+				<table style="width: 100%; height: 316px"><form action="/SaveBillInfo" method="post">
 					<tr>
 						<td class="auto-style6" style="height: 34px; width: 147px">
 						Company</td>
@@ -178,10 +178,7 @@ img.right {float:right;margin:0 0 0 20px}
 						<% FOREACH single = cats%>
 						<option value="<% single %>"><% single %></option>
 						<% END %>
-						</select><br>
-						---OTHER---<br>
-						<input name="cat" type="text"  /><br><BR>
-						</td>
+						</select>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">Amount Due</td>
@@ -218,6 +215,12 @@ img.right {float:right;margin:0 0 0 20px}
 						<td class="auto-style6" style="width: 147px">Bill Site URL</td>
 						<td class="auto-style6">
 						<input name="bill_url" type="text" value="http://" /></td>
+					</tr>
+					<tr>
+						<td class="auto-style6" style="width: 147px">Bill Late 
+						Fee</td>
+						<td class="auto-style6">
+						<input name="bill_late_fee" type="text" value="0" /></td>
 					</tr>
 					<tr>
 						<td class="auto-style6" style="width: 147px">&nbsp;</td>
