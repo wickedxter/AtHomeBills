@@ -1,16 +1,13 @@
 #!/usr/bin/perl
 
 
-use FindBin;
-use lib ("$FindBin::Bin/lib");
-
 use strict;
 use warnings;
 use DateTime;
 use Dancer;
 use Dancer::Plugin::Database;
-use HTML::Calendar::Simple; #this was altered because it printed the table borders.
-use Data::Dumper;
+use HTML::Calendar::Simple; 
+
 
 
 
@@ -31,7 +28,7 @@ use Data::Dumper;
 # GUI program.
 ################################
 
-our $VERSION = 'v1.0.12';
+our $VERSION = 'v1.0.13';
 
 #################
 # Date and time
@@ -342,7 +339,6 @@ get '/PayBill/:name' => sub {
             'bill_url' => $bills->{$bkey[0]}{bill_url},
             'bill_late' => $bills->{$bkey[0]}{bill_late_fee},
             'late_charge' => $late_charge,
-            'mday' => $mday2,
             'ver' => $VERSION,
         },{layout => undef};  
 };
@@ -479,7 +475,7 @@ sub display_calendar {
     
     #Since the calendar module doesnt allow customization had to add CSS
     #to match the layouts
-    my $changed = $cal->calendar_month;
+    my $changed = $cal->calendar_month({border => 0});
         $changed =~ s/\>$mday\</\>\<font class\=calender_current_day\>\>$mday\<\<\/font\>\</;
         
         return $changed;

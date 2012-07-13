@@ -43,7 +43,7 @@ sub INSTALL_MODS {
         print "Found your useing perl: $1\n";
         
         if($sub > 10){
-            exec 'cpanm --Install Dancer DBD::SQLite DateTime YAML Dancer::Plugin::Database Template';
+            exec 'cpanm --Install Dancer DBD::SQLite DateTime YAML Dancer::Plugin::Database Template HTML::Calendar::Simple';
         }else {
             print "Sorry that perl version: $1 isn't supported, please upgrade\n";
         }
