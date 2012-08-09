@@ -183,6 +183,12 @@ img.right {float:right;margin:0 0 0 20px}
 						<br />
 						REVISION:<br />
 						<hr /><br />
+						v1.0.13.2<br>
+						- Updated the the script module_instaillion.pl to use cpan since cpanm isn't installed with perl by default.<br>
+						 v1.0.13<br>
+						- Removed the module HTML::Calendar::Simple from the archive and from now on will download when then module_instillion.pl is executed.<br>
+						v1.0.12.2<br />
+						-= A debuging feature was left printing its output. Turned off.<br>
 						v1.0.12<br />
 						-= More bug fixes and now you can supply a bill late fee. It will show a warning and add to the amount thats owed on the
 						pay bill page.<br>

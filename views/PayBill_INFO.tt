@@ -195,7 +195,7 @@ img.right {float:right;margin:0 0 0 20px}
 								<font font-size="medium" color="#FF0000">WARNING LATE CHARGES<br></font>
 								<% amt_due = amt_due + bill_late %>
 						<% END %>
-						<br />MDAY: <% mday %>
+						<br />
 						<br />
 						<div class="auto-style6">[<a target="_blank" href="<% bill_url %>">TAKE ME TO WEBSITE</a>]</div><br />
 						

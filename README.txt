@@ -19,6 +19,20 @@ https://sourceforge.net/p/athomebills/discussion/
 
 REVISION:
 
+v1.0.13.2
+	- Updated the the script module_instaillion.pl to use cpan since cpanm isn't installed with perl by default.
+
+v1.0.13
+	- Removed the module HTML::Calendar::Simple from the archive and from now on will download when then module_instillion.pl
+	  is executed.
+
+v1.0.12.2
+        - A debuging feature was left printing its output. Turned off.
+
+v1.0.12
+        - More bug fixes and now you can supply a bill late fee. It will show a warning and add to the amount thats owed on the
+          pay bill page.
+
 v1.0.11.1 
 	- Bill amounts now reflect the balance owed after a payment has been made.
 	- Database conncurency feature this checks a list of coulmns what should have against whats in the database
